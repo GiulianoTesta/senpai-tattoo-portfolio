@@ -1,9 +1,7 @@
-
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://giulianotesta.github.io',
-  base: '/senpai-tattoo-portfolio',
+  site: 'https://www.senpaitattoo.it', // dominio su GitHub Pages: deve coincidere con public/CNAME
   build: {
     inlineStylesheets: 'always',
   },
