@@ -15,7 +15,7 @@ npm run build    # crea la cartella dist/ da pubblicare
 - **Foto degli artisti**: `src/assets/artists/<slug>.jpg`, con slug `nicole`, `samuele`, `m3ltdwn`, `emanuele`
 - Le foto vengono ridimensionate e convertite in WebP in automatico durante la build.
 
-## Pubblicazione (Netlify)
-1. Carica il progetto su GitHub.
-2. Su Netlify: *Add new site → Import from Git*, scegli il repository. Build command `npm run build`, cartella `dist`.
-3. Quando c'è il dominio: aggiungilo in Netlify (*Domain management*) e decommenta `site` in `astro.config.mjs`.
+## Pubblicazione (GitHub Pages)
+Ogni push su `main` pubblica il sito in automatico (`.github/workflows/deploy.yml`).
+- Una tantum: su GitHub *Settings → Pages → Source: GitHub Actions*.
+- Dominio: `public/CNAME` e `site` in `astro.config.mjs` devono contenere lo stesso dominio.
