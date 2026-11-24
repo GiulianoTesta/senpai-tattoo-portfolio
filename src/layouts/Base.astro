@@ -9,6 +9,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'TattooParlor',
   name: studio.name,
+  url: Astro.site?.href,
   email: studio.email,
   telephone: studio.phone,
   address: { '@type': 'PostalAddress', streetAddress: studio.address, addressLocality: studio.postalCity, addressRegion: studio.region, addressCountry: 'IT' },
@@ -28,6 +29,8 @@ const jsonLd = {
   <meta property="og:title" content={title}>
   <meta property="og:description" content={description}>
   <meta property="og:locale" content="it_IT">
+  <meta property="og:url" content={Astro.site?.href}>
+  <link rel="canonical" href={Astro.site?.href}>
   <link rel="icon" href={`${base}logo/Logo.svg`} type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
