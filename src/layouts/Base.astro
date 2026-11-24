@@ -10,6 +10,7 @@ const jsonLd = {
   '@type': 'TattooParlor',
   name: studio.name,
   url: Astro.site?.href,
+  logo: new URL('favicon-480.png', Astro.site).href,
   email: studio.email,
   telephone: studio.phone,
   address: { '@type': 'PostalAddress', streetAddress: studio.address, addressLocality: studio.postalCity, addressRegion: studio.region, addressCountry: 'IT' },
@@ -32,6 +33,8 @@ const jsonLd = {
   <meta property="og:url" content={Astro.site?.href}>
   <link rel="canonical" href={Astro.site?.href}>
   <link rel="icon" href={`${base}logo/Logo.svg`} type="image/svg+xml">
+  <!-- PNG quadrato (multiplo di 48px): formato preferito da Google per l'icona nei risultati di ricerca -->
+  <link rel="icon" href={`${base}favicon-480.png`} type="image/png" sizes="480x480">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <!-- font non bloccanti: la pagina si disegna subito con il font di sistema, poi passa a quelli Google -->
