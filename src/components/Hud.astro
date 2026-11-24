@@ -1,5 +1,6 @@
 ---
 // Interfaccia da "volume manga": sigillo in alto, fumetto con il capitolo corrente, striscia di vignette come indice.
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/'); // su GitHub Pages il sito sta in una sottocartella
 const chapters = [
   { id: 'hero', jp: '序章', title: 'Senpai', color: 'rose' },
   { id: 'patto', jp: '第一話', title: 'Il patto', color: 'yellow' },
@@ -16,7 +17,7 @@ const chapters = [
 
 <header class="top">
   <a href="#hero" class="seal" aria-label="Senpai Tattoo Studio, torna all'inizio">
-    <img src="/logo/senpai-sigillo.svg" alt="" width="48" height="48">
+    <img src={`${base}logo/senpai-sigillo.svg`} alt="" width="48" height="48">
     <span class="vol mono">Vol.01</span>
   </a>
   <div class="bubble" id="bubble" aria-hidden="true">

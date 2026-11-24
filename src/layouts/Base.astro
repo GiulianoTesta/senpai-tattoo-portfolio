@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { studio } from '../data/site';
 
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/'); // su GitHub Pages il sito sta in una sottocartella
 const title = 'Senpai Tattoo Studio · Paternò (CT)';
 const description = `Studio di tatuaggi a Paternò a tema manga e anime: anime, fine line, chicano, handpoke e realistico. ${studio.days} ${studio.hours}.`;
 const jsonLd = {
@@ -27,7 +28,7 @@ const jsonLd = {
   <meta property="og:title" content={title}>
   <meta property="og:description" content={description}>
   <meta property="og:locale" content="it_IT">
-  <link rel="icon" href="/logo/Logo.svg" type="image/svg+xml">
+  <link rel="icon" href={`${base}logo/Logo.svg`} type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <!-- font non bloccanti: la pagina si disegna subito con il font di sistema, poi passa a quelli Google -->

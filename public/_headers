@@ -1,3 +1,0 @@
-# Netlify: i file in /_astro hanno l'hash nel nome, quindi il browser puo tenerli in cache per sempre
-/_astro/*
-  Cache-Control: public, max-age=31536000, immutable
