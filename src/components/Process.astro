@@ -1,18 +1,23 @@
 ---
 import { process } from '../data/site';
+// Capitolo 4: lo stesso disegno passa da bozza a tatuaggio guarito in una scena 3D (src/scripts/process-scene.js).
+// L'SVG resta come versione di riserva: si vede finché la scena non è pronta, o sempre se WebGL non c'è.
 ---
-<section id="process" data-ch="CH.04">
-  <div class="stick wrap">
-    <div>
-      <div class="chapter"><h2>Dal foglio<br>alla pelle</h2></div>
+<section id="process" data-ch="CH.04" aria-labelledby="process-title">
+  <div class="stage-wrap wrap">
+    <div class="side">
+      <div class="chapter"><h2 id="process-title">Dal foglio<br>alla pelle</h2></div>
       <ol class="layers" id="layers">
-        {process.map((p, i) => <li data-note={p.note}><span class="mono">{String(i + 1).padStart(2, '0')}</span><span class="ln">{p.name}</span></li>)}
+        {process.map((p, i) => (
+          <li><button type="button" data-step={i} data-note={p.note} aria-controls="stage"><span class="mono">{String(i + 1).padStart(2, '0')}</span><span class="ln">{p.name}</span></button></li>
+        ))}
       </ol>
       <p class="note" id="note" aria-live="polite">{process[0].note}</p>
     </div>
-    <div class="panel">
-      <span class="lbl mono" id="lbl">Strato 01 / 06</span><span class="lbl2 mono">Scala 1:1 · 12 × 12 cm</span>
-      <svg id="art" viewBox="0 0 400 400" role="img" aria-label="Disegno di onda e sole che si costruisce strato dopo strato">
+
+    <div class="stage-col">
+    <div class="panel" id="stage">
+      <svg id="art" viewBox="0 0 400 400" role="img" aria-label="Disegno di onda e sole che si costruisce fase dopo fase">
         <defs><pattern id="ht" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.4" fill="#120f1a"/></pattern></defs>
         <g id="L0" fill="none" stroke="#2f6bff" stroke-width="1.2" stroke-dasharray="3 4">
           <circle cx="250" cy="150" r="78"/><path d="M30 300 C90 210 170 210 210 270 C230 300 280 300 300 260 C320 220 370 230 380 270"/><path d="M40 340 C120 300 200 330 380 320"/>
@@ -37,28 +42,63 @@ import { process } from '../data/site';
         </g>
         <text id="L5" x="40" y="90" style="opacity:0" font-family="Dela Gothic One, sans-serif" font-size="44" fill="#120f1a">波</text>
       </svg>
+      <canvas id="gl" role="img" aria-label="Fase 1 di 6, Bozza"></canvas>
+      <span class="lbl mono" id="lbl">Fase 01 / 06</span>
+      <span class="bar" aria-hidden="true"><i id="pbar"></i></span>
+    </div>
+      <div class="ctrl">
+        <button type="button" class="nav" id="prev" aria-label="Fase precedente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg></button>
+        <button type="button" class="nav" id="next" aria-label="Fase successiva"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
+        <button type="button" class="play" id="play" aria-pressed="false"><span class="ico" aria-hidden="true"></span><span id="playTxt">Riproduci</span></button>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-#process{height:520vh;background:var(--c-cyan);color:var(--ink)}
-.stick{position:sticky;top:0;height:100svh;display:grid;grid-template-rows:auto 1fr;gap:16px;padding-block:88px 72px;overflow:hidden}
-@media(min-width:900px){.stick{grid-template-columns:5fr 7fr;grid-template-rows:1fr;align-items:center;gap:48px}}
+#process{background:var(--c-cyan);color:var(--ink)}
+.stage-wrap{min-height:100svh;display:grid;grid-template-rows:auto auto;gap:24px;padding-block:88px 96px;align-content:center}
+@media(min-width:900px){.stage-wrap{grid-template-columns:5fr 7fr;grid-template-rows:1fr;align-items:center;gap:48px}}
 .chapter{margin-bottom:20px}
 .layers{list-style:none;margin:0;padding:0;display:grid;gap:2px}
-.layers li{display:flex;gap:14px;align-items:baseline;opacity:.35;transition:opacity .3s,transform .3s}
-.layers li:global(.on){opacity:1}
-.layers li:global(.now){transform:translateX(12px)}
-.layers li:global(.now) .ln{background:var(--ink);color:var(--c-yellow);padding:0 .2em}
+.layers button{all:unset;box-sizing:border-box;display:flex;gap:14px;align-items:baseline;width:100%;cursor:pointer;opacity:.4;transition:opacity .3s,transform .3s}
+.layers button:hover{opacity:.75}
+.layers button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.layers button.on{opacity:1}
+.layers button[aria-current="step"]{transform:translateX(12px)}
+.layers button[aria-current="step"] .ln{background:var(--ink);color:var(--c-yellow);padding:0 .2em}
 .ln{font-family:var(--display);font-size:clamp(20px,2.8vw,38px);line-height:1.2}
 .note{margin:16px 0 0;min-height:3.2em;max-width:40ch;font-weight:700}
-.panel{position:relative;justify-self:center;align-self:center;width:min(100%,58vh,620px);aspect-ratio:1;border:4px solid var(--ink);background:var(--paper);box-shadow:12px 12px 0 var(--c-rose);overflow:hidden}
-svg{width:100%;height:100%;display:block}
-.lbl{position:absolute;left:10px;top:8px;color:#4a4458}
-.lbl2{position:absolute;right:10px;bottom:8px;color:#4a4458}
+.stage-col{display:grid;justify-items:center;gap:22px}
+.ctrl{display:flex;gap:10px;justify-self:start}
+@media(min-width:900px){.ctrl{justify-self:center}}
+.ctrl button{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;min-width:48px;padding:0 14px;background:var(--paper);color:var(--ink);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);font:700 15px/1 var(--body);cursor:pointer;transition:transform .15s,box-shadow .15s}
+.ctrl button:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.ctrl button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.ctrl button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.play[aria-pressed="true"]{background:var(--c-yellow)}
+/* icona play/pausa disegnata in CSS */
+.ico{width:12px;height:14px;background:var(--ink);clip-path:polygon(0 0,100% 50%,0 100%)}
+.play[aria-pressed="true"] .ico{clip-path:polygon(0 0,35% 0,35% 100%,0 100%,0 0,65% 0,100% 0,100% 100%,65% 100%,65% 0)}
+
+.panel{position:relative;width:min(100%,68vh,640px);aspect-ratio:1;border:4px solid var(--ink);background:var(--paper);box-shadow:12px 12px 0 var(--c-rose);overflow:hidden}
+.panel svg{width:100%;height:100%;display:block}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .8s}
+.panel.gl{background:#0d0b12}
+.panel.gl #gl{opacity:1}
+.panel.gl #art{visibility:hidden}
+/* vignetta cinematografica sopra la scena 3D */
+.panel.gl::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 95% at 50% 45%,transparent 55%,rgb(5 4 8 / .55))}
+.lbl{position:absolute;left:12px;top:10px;z-index:1;color:#4a4458}
+.panel.gl .lbl{color:var(--paper);background:rgb(13 11 18 / .62);padding:2px 6px}
+.bar{position:absolute;left:0;right:0;bottom:0;height:4px;z-index:1;background:rgb(18 15 26 / .15)}
+.bar i{display:block;height:100%;background:var(--c-yellow);transform-origin:left;transform:scaleX(0)}
 #art g,#art text{transition:opacity .5s}
 .draw path,.draw circle{stroke-dasharray:var(--len);stroke-dashoffset:calc(var(--len) * (1 - var(--p,0)))}
-@media(max-width:899px){.layers{grid-template-columns:repeat(2,1fr)}.note{min-height:4.8em}}
-@media (prefers-reduced-motion:reduce){#process{height:auto}.stick{position:relative;height:auto}}
+@media(max-width:899px){.layers{grid-template-columns:repeat(2,1fr)}.note{min-height:4.8em}.layers button[aria-current="step"]{transform:none}}
 </style>
+
+<script>
+import '../scripts/process.js';
+</script>

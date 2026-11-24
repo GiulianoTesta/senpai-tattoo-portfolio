@@ -27,28 +27,7 @@ const manifesto = () => {
   words.forEach((w, i) => w.classList.toggle('on', reduce || i < p * words.length + 0.5));
 };
 
-/* processo a strati guidato dallo scroll */
-const sec = $('#process');
-const items = $$('#layers li');
-const L = [0, 1, 2, 3, 4, 5].map((i) => $('#L' + i));
-const draws = $$('#L2 > *');
-let lastStep = -1;
-const processScroll = () => {
-  const r = sec.getBoundingClientRect(), span = r.height - innerHeight;
-  const p = reduce ? 1 : span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 1;
-  const step = Math.min(5, Math.floor(p * 6));
-  const lp = Math.min(1, Math.max(0, p * 6 - 2));
-  draws.forEach((e) => e.style.setProperty('--p', step >= 2 ? lp : 0));
-  if (step === lastStep) return;
-  lastStep = step;
-  items.forEach((li, i) => { li.classList.toggle('on', i <= step); li.classList.toggle('now', i === step); });
-  $('#note').textContent = items[step].dataset.note;
-  $('#lbl').textContent = `Strato ${pad(step + 1)} / 06`;
-  L[0].style.opacity = step <= 2 ? 1 : 0;
-  L[1].style.opacity = step >= 1 && step <= 2 ? 1 : 0;
-  [3, 4, 5].forEach((k) => (L[k].style.opacity = step >= k ? 1 : 0));
-  $('#art').style.filter = step >= 5 ? 'saturate(.85) contrast(.95)' : 'none';
-};
+/* il processo (capitolo 4) ha il suo script: src/scripts/process.js */
 
 /* capitolo corrente: fumetto in alto + vignette in basso che si riempiono */
 const chapters = $$('[data-ch]');
@@ -77,7 +56,6 @@ const chapterScroll = () => {
 const onScroll = () => {
   chapterScroll();
   manifesto();
-  processScroll();
 };
 addEventListener('scroll', onScroll, { passive: true });
 onScroll();

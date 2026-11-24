@@ -13,7 +13,9 @@ export const studio = {
   email: "senpaitattoostudio@gmail.com",
   phone: "+393522635018",
   phoneLabel: "352 263 5018",
-  instagram: "", // es. 'https://instagram.com/senpai.tattoo' (vuoto = nascosto)
+  instagram:
+    "https://www.instagram.com/senpai.tattoostudio?bqrl=MWx5bWpleXNlZ2hmaQ==",
+  tiktok: "https://www.tiktok.com/@senpai.tattoo.stu?_r=1&_t=ZN-9BfgUbP3ZTi",
   vat: "", // P.IVA da inserire (obbligatoria nel footer per legge)
 };
 
@@ -110,12 +112,12 @@ export const process = [
     note: "La linea principale, una passata sola. Il momento in cui il tatuaggio diventa tuo.",
   },
   {
-    name: "Ombre a retino",
-    note: "Ombre puntinate come in una tavola stampata.",
+    name: "Ombre",
+    note: "Ombre nette sotto la frangia e retino sulla divisa, come in una tavola manga.",
   },
   {
     name: "Colore",
-    note: "Colore pieno. Il sole rosso è sempre l'ultima cosa che si stende.",
+    note: "Colore pieno su capelli, occhi e divisa. Il riflesso negli occhi è l'ultimo tocco.",
   },
   {
     name: "Guarigione",
