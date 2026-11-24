@@ -1,0 +1,88 @@
+---
+// Interfaccia da "volume manga": sigillo in alto, fumetto con il capitolo corrente, striscia di vignette come indice.
+const chapters = [
+  { id: 'hero', jp: '序章', title: 'Senpai', color: 'rose' },
+  { id: 'patto', jp: '第一話', title: 'Il patto', color: 'yellow' },
+  { id: 'cast', jp: '第二話', title: 'Il cast', color: 'lime' },
+  { id: 'stili', jp: '第三話', title: 'Stili', color: 'orange' },
+  { id: 'process', jp: '第四話', title: 'Dal foglio alla pelle', color: 'cyan' },
+  { id: 'tavole', jp: '第五話', title: 'Tavole', color: 'violet' },
+  { id: 'prenota', jp: '第六話', title: 'Prenota', color: 'blue' },
+];
+---
+<div id="loader" aria-hidden="true">
+  <div><div class="count"><span id="ld">000</span>%</div><div class="mono">ページ読み込み中 · caricamento vol.01</div></div>
+</div>
+
+<header class="top">
+  <a href="#hero" class="seal" aria-label="Senpai Tattoo Studio, torna all'inizio">
+    <img src="/logo/senpai-sigillo.svg" alt="" width="48" height="48">
+    <span class="vol mono">Vol.01</span>
+  </a>
+  <div class="bubble" id="bubble" aria-hidden="true">
+    <span class="jp" id="bubbleJp">{chapters[0].jp}</span>
+    <span class="mono" id="bubbleTitle">{chapters[0].title}</span>
+  </div>
+</header>
+
+<nav class="strip" aria-label="Capitoli">
+  {chapters.map((c, i) => (
+    <a href={`#${c.id}`} class={`koma k-${c.color}`} data-chapter={i} data-jp={c.jp} data-title={c.title} aria-label={`${c.jp}: ${c.title}`}>
+      <span>{i}</span>
+    </a>
+  ))}
+</nav>
+
+<a href="#prenota" class="fab btn k-yellow">Prenota</a>
+<div id="cursor" aria-hidden="true"></div>
+
+<style>
+#loader{position:fixed;inset:0;z-index:300;display:grid;place-items:center;background:var(--ink);transition:clip-path .9s cubic-bezier(.77,0,.18,1);clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+#loader.out{clip-path:polygon(100% 0,100% 0,100% 100%,100% 100%)}
+#loader .count{font-family:var(--display);font-size:clamp(64px,18vw,220px);line-height:1;background:linear-gradient(90deg,var(--c-rose),var(--c-yellow),var(--c-cyan),var(--c-lime));-webkit-background-clip:text;background-clip:text;color:transparent}
+#loader .mono{color:var(--line);text-align:center;margin-top:8px}
+
+/* --- in alto: sigillo + fumetto del capitolo --- */
+.top{position:fixed;z-index:100;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;
+  padding:calc(14px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
+@media(min-width:900px){.top{padding-top:22px;padding-left:28px;padding-right:28px}}
+.seal{pointer-events:auto;display:flex;align-items:center;gap:10px;text-decoration:none;min-height:48px}
+.seal img{width:48px;height:48px;transform:rotate(-6deg);transition:transform .35s cubic-bezier(.3,1.7,.5,1);filter:drop-shadow(3px 3px 0 var(--ink))}
+.seal:hover img{transform:rotate(4deg) scale(1.08)}
+.vol{background:var(--paper);color:var(--ink);border:2px solid var(--ink);padding:3px 8px;box-shadow:3px 3px 0 var(--ink)}
+.bubble{position:relative;display:grid;justify-items:end;gap:2px;background:var(--paper);color:var(--ink);border:3px solid var(--ink);border-radius:28px;padding:8px 18px 10px;box-shadow:4px 4px 0 var(--ink);transform-origin:85% 100%}
+.bubble::after{content:"";position:absolute;right:30px;bottom:-15px;border:9px solid transparent;border-top:14px solid var(--ink);border-bottom:0}
+.bubble::before{content:"";position:absolute;right:33px;bottom:-8px;z-index:1;border:6px solid transparent;border-top:9px solid var(--paper);border-bottom:0}
+.jp{font-family:var(--display);font-size:clamp(18px,2vw,26px);line-height:1.1}
+.bubble .mono{font-size:11px;color:#4a4458}
+.bubble:global(.pop){animation:pop .45s cubic-bezier(.3,1.8,.5,1)}
+@keyframes pop{0%{transform:scale(.6) rotate(4deg)}100%{transform:none}}
+
+/* --- in basso: striscia di vignette (koma) come indice e barra di lettura --- */
+.strip{position:fixed;z-index:100;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;align-items:flex-end;gap:6px;padding:8px;background:var(--paper);border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+@media(min-width:900px){.strip{left:28px;bottom:24px}}
+.koma{--fill:0;position:relative;display:grid;place-items:center;width:30px;height:40px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:11px;font-weight:700;overflow:hidden;transition:transform .3s cubic-bezier(.3,1.7,.5,1)}
+.koma:nth-child(odd){transform:rotate(-3deg)}.koma:nth-child(even){transform:rotate(2deg)}
+.koma::before{content:"";position:absolute;inset:0;background:var(--k);transform-origin:bottom;transform:scaleY(var(--fill));transition:transform .2s linear}
+.koma span{position:relative}
+.koma:hover,.koma:focus-visible{transform:translateY(-6px) rotate(0)}
+.koma:global(.done){--fill:1}
+.koma:global(.done)::before{background:var(--ink)}
+.koma:global(.done){color:var(--paper)}
+.koma:global(.now){transform:translateY(-8px) scale(1.15);z-index:1}
+/* tooltip con il titolo, solo con mouse */
+@media (hover:hover){
+  .koma::after{content:attr(data-jp) " · " attr(data-title);position:absolute;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%) scale(.8);opacity:0;white-space:nowrap;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:11px;padding:4px 8px;pointer-events:none;transition:opacity .2s,transform .2s}
+  .koma{overflow:visible}
+  .koma:hover::after{opacity:1;transform:translateX(-50%) scale(1)}
+}
+@media(max-width:420px){.koma{width:26px;height:36px}.strip{gap:4px;padding:6px}}
+
+.fab{position:fixed;z-index:110;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));min-height:56px;font-size:16px}
+@media(min-width:900px){.fab{right:28px;bottom:24px}}
+
+#cursor{position:fixed;z-index:200;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border:2px solid var(--c-yellow);border-radius:50%;pointer-events:none;mix-blend-mode:difference;transition:width .25s,height .25s,margin .25s;display:none}
+#cursor.hot{width:72px;height:72px;margin:-36px 0 0 -36px}
+@media (pointer:fine){#cursor{display:block}}
+@media (prefers-reduced-motion:reduce){.koma,.koma::before{transition:none}}
+</style>

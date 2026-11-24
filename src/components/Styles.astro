@@ -1,0 +1,47 @@
+---
+import { getImage } from 'astro:assets';
+import { styles, artists } from '../data/site';
+// Foto del tatuatore dello stile (stessi file del cast), mostrata nella carta al passaggio del mouse
+const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/artists/*.{jpg,jpeg,png,webp,avif}', { eager: true });
+const peekImg: Record<string, string> = {};
+for (const a of artists) {
+  const photo = Object.entries(photos).find(([p]) => p.split('/').pop()!.split('.')[0] === a.slug)?.[1].default;
+  if (photo) peekImg[a.name] = (await getImage({ src: photo, width: 400, quality: 72 })).src;
+}
+---
+<section id="stili" class="styles-sec wrap pad" data-ch="CH.03">
+  <div class="chapter"><h2>Stili</h2><span class="mono">Prezzo · da concordare</span></div>
+  <ol class="styles" id="styles">
+    {styles.map((s, i) => (
+      <li class={`k-${s.color}`} data-g={s.glyph} data-img={peekImg[s.artist]}>
+        <span class="mono n">{String(i + 1).padStart(2, '0')}.</span>
+        <span class="nm">{s.name}</span>
+        <span class="ds">{s.desc}</span>
+        <span class="mono wt">{s.artist}</span>
+      </li>
+    ))}
+  </ol>
+</section>
+<div id="peek" aria-hidden="true"><div class="tone"></div><span id="peekG"></span><img id="peekI" alt="" hidden /></div>
+
+<style>
+.styles-sec{background:var(--ink)}
+.styles{list-style:none;margin:0;padding:0;border-top:2px solid var(--paper)}
+.styles li{display:grid;grid-template-columns:44px 1fr;gap:4px 16px;align-items:baseline;padding:20px 0;border-bottom:1px solid rgb(255 246 236 / .2);position:relative;cursor:default;transition:padding .3s,color .3s}
+@media(min-width:760px){.styles li{grid-template-columns:80px 1fr 1.2fr 180px}}
+.styles li::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--k);transform:scaleY(0);transform-origin:bottom;transition:transform .35s cubic-bezier(.2,.9,.1,1)}
+.styles li:hover{padding-left:16px;color:var(--ink)}
+.styles li:hover::before{transform:scaleY(1)}
+.styles{position:relative;z-index:0}
+.nm{font-family:var(--display);font-size:clamp(28px,4vw,56px);line-height:1;color:var(--k);transition:color .3s}
+.styles li:hover .nm{color:var(--ink)}
+.ds{grid-column:2;color:#c9c2d6;font-size:15px}
+.styles li:hover .ds{color:var(--ink)}
+.wt{grid-column:2}
+@media(min-width:760px){.ds{grid-column:auto}.wt{grid-column:auto;text-align:right}}
+#peek{position:fixed;left:0;top:0;z-index:90;width:200px;aspect-ratio:3/4;border:3px solid var(--ink);background:var(--pk,var(--c-rose));box-shadow:8px 8px 0 var(--paper);pointer-events:none;display:grid;place-items:center;font-family:var(--display);font-size:110px;color:var(--paper);-webkit-text-stroke:4px var(--ink);paint-order:stroke;opacity:0;transform:translate(-50%,-50%) scale(.6) rotate(-8deg);transition:opacity .25s,transform .35s cubic-bezier(.3,1.6,.5,1)}
+#peek:global(.on){opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-3deg)}
+#peek .tone{position:absolute;inset:0;color:var(--ink);opacity:.18}
+#peek img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%}
+@media (pointer:coarse){#peek{display:none}}
+</style>

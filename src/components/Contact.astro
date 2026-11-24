@@ -1,0 +1,58 @@
+---
+import { studio } from '../data/site';
+const wa = `https://wa.me/${studio.phone.replace('+', '')}?text=${encodeURIComponent('Ciao Senpai! Vorrei info per un tatuaggio.')}`;
+const maps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${studio.address}, ${studio.postalCity}`)}`;
+const marquee = ['Notice me, Senpai', '先輩に気づいて'];
+---
+<div class="marquee" aria-hidden="true"><div class="track">
+  {Array.from({ length: 4 }, () => marquee.map((t) => <span>{t}</span>))}
+</div></div>
+
+<section id="prenota" class="contact-sec wrap pad" data-ch="CH.06">
+  <div class="cta">
+    <div class="rv">
+      <h2>Il tuo<br><em>primo</em><br>capitolo.</h2>
+    </div>
+    <div class="rv">
+      <p class="lead">Mandaci la tua idea, una vignetta o una foto di riferimento. Ti rispondiamo con bozza e preventivo: il prezzo si concorda sul progetto.</p>
+      <div class="actions">
+        <a class="btn k-lime" href={wa} target="_blank" rel="noopener">Scrivici su WhatsApp →</a>
+        <a class="btn k-yellow" href={`mailto:${studio.email}`}>Manda una email</a>
+      </div>
+      <dl class="info mono">
+        <dt>Orari</dt><dd>{studio.days} · {studio.hours}</dd>
+        <dt>Indirizzo</dt><dd><a href={maps} target="_blank" rel="noopener">{studio.address}, {studio.city} ↗</a></dd>
+        <dt>Telefono</dt><dd><a href={`tel:${studio.phone}`}>{studio.phoneLabel}</a></dd>
+        <dt>Email</dt><dd><a href={`mailto:${studio.email}`}>{studio.email}</a></dd>
+        {studio.instagram && <><dt>Instagram</dt><dd><a href={studio.instagram} target="_blank" rel="noopener">Profilo ↗</a></dd></>}
+      </dl>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap mono">
+  <span>© {new Date().getFullYear()} {studio.name}{studio.vat && ` · P.IVA ${studio.vat}`}</span>
+  <span>Fine del vol.01 · つづく</span>
+</footer>
+
+<style>
+.marquee{overflow:hidden;border-block:4px solid var(--ink);background:var(--c-yellow);color:var(--ink);padding-block:14px}
+.track{display:flex;width:max-content;gap:48px;animation:slide 20s linear infinite;font-family:var(--display);font-size:clamp(32px,6vw,84px);line-height:1;white-space:nowrap}
+.track span:nth-child(4n+2){color:var(--c-rose)}.track span:nth-child(4n+3){color:var(--c-violet)}.track span:nth-child(4n){color:var(--c-blue)}
+.track span::after{content:"★";margin-left:48px;color:var(--ink)}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+.contact-sec{background:var(--c-violet);color:var(--paper);overflow:hidden}
+.cta{display:grid;gap:40px}
+@media(min-width:900px){.cta{grid-template-columns:7fr 5fr;align-items:end}}
+.cta > div:first-child{position:relative}
+h2{font-family:var(--display);font-weight:400;font-size:clamp(48px,9vw,150px);line-height:.9;margin:0;text-transform:uppercase}
+em{font-style:normal;color:var(--c-yellow);-webkit-text-stroke:3px var(--ink);paint-order:stroke}
+.lead{font-size:clamp(17px,1.5vw,21px);max-width:40ch;margin:0}
+.actions{display:flex;flex-wrap:wrap;gap:16px;margin-top:28px}
+.info{display:grid;grid-template-columns:auto 1fr;gap:10px 20px;margin:36px 0 0;font-size:13px}
+.info dt{color:var(--c-cyan)}
+.info dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.info a{text-decoration-color:var(--c-yellow);text-underline-offset:4px}
+footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-block:24px 110px;background:var(--ink);color:var(--line)}
+</style>

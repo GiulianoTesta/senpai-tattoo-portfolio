@@ -1,0 +1,37 @@
+---
+import { Image } from 'astro:assets';
+import { gallery } from '../data/site';
+// Tutte le foto in src/assets/gallery, in ordine di nome file.
+const files = import.meta.glob<{ default: ImageMetadata }>('../assets/gallery/*.{jpg,jpeg,png,webp,avif}', { eager: true });
+const items = Object.entries(files).sort(([a], [b]) => a.localeCompare(b)).map(([path, mod]) => {
+  const key = path.split('/').pop()!.replace(/\.[^.]+$/, '');
+  return { key, src: mod.default, caption: gallery[key] ?? '' };
+});
+const colors = ['rose', 'yellow', 'cyan', 'lime', 'orange', 'violet', 'blue', 'rose'];
+---
+<section id="tavole" class="gallery-sec wrap pad" data-ch="CH.05">
+  <div class="chapter"><h2>Tavole</h2><span class="mono">Lavori dello studio · {items.length} foto</span></div>
+  <div class="page">
+    {items.map((it, i) => (
+      <figure class={`panel rv k-${colors[i % colors.length]}`}>
+        <Image src={it.src} alt={it.caption ? `Tatuaggio: ${it.caption}` : 'Tatuaggio dello studio Senpai'} widths={[480, 800, 1200]} sizes="(min-width: 900px) 25vw, (min-width: 500px) 50vw, 100vw" loading="lazy" quality={72} />
+        <span class="num mono">P.{String(i + 1).padStart(2, '0')}</span>
+        {it.caption && <figcaption class="mono">{it.caption}</figcaption>}
+      </figure>
+    ))}
+  </div>
+</section>
+
+<style>
+.gallery-sec{background:var(--c-rose);color:var(--ink);overflow:hidden}
+.gallery-sec::before{content:"";position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 80% 10%,rgb(255 255 255 / .12) 0 4deg,transparent 4deg 12deg);pointer-events:none}
+/* colonne "a muratura": ogni foto mantiene le sue proporzioni, niente ritagli */
+.page{position:relative;columns:4 220px;column-gap:18px}
+.panel{margin:0 0 22px;break-inside:avoid;position:relative;border:4px solid var(--ink);background:var(--k);box-shadow:6px 6px 0 var(--ink);rotate:-.6deg;transition:rotate .35s,box-shadow .35s}
+.panel:nth-child(even){rotate:.6deg}
+.panel:hover{rotate:0deg;box-shadow:10px 10px 0 var(--ink)}
+.panel :global(img){display:block;width:100%;height:auto}
+.num{position:absolute;right:8px;top:8px;background:var(--ink);color:var(--paper);padding:2px 6px}
+figcaption{border-top:3px solid var(--ink);padding:8px 10px;color:var(--ink);font-size:13px}
+@media (prefers-reduced-motion:reduce){.panel{transition:none}}
+</style>

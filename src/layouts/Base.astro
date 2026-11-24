@@ -1,0 +1,41 @@
+---
+import '../styles/global.css';
+import { studio } from '../data/site';
+
+const title = 'Senpai Tattoo Studio · Paternò (CT)';
+const description = `Studio di tatuaggi a Paternò a tema manga e anime: anime, fine line, chicano, handpoke e realistico. ${studio.days} ${studio.hours}.`;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'TattooParlor',
+  name: studio.name,
+  email: studio.email,
+  telephone: studio.phone,
+  address: { '@type': 'PostalAddress', streetAddress: studio.address, addressLocality: studio.postalCity, addressRegion: studio.region, addressCountry: 'IT' },
+  openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], opens: '10:30', closes: '19:30' }],
+  ...(studio.instagram && { sameAs: [studio.instagram] }),
+};
+---
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="theme-color" content="#120f1a">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:locale" content="it_IT">
+  <link rel="icon" href="/logo/Logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- font non bloccanti: la pagina si disegna subito con il font di sistema, poi passa a quelli Google -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;700&family=B612+Mono:wght@400;700&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;700&family=B612+Mono:wght@400;700&display=swap"></noscript>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+</head>
+<body>
+  <slot />
+</body>
+</html>
