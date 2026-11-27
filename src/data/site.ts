@@ -16,7 +16,7 @@ export const studio = {
   instagram:
     "https://www.instagram.com/senpai.tattoostudio?bqrl=MWx5bWpleXNlZ2hmaQ==",
   tiktok: "https://www.tiktok.com/@senpai.tattoo.stu?_r=1&_t=ZN-9BfgUbP3ZTi",
-  vat: "", // P.IVA da inserire (obbligatoria nel footer per legge)
+  vat: "05980940877",
 };
 
 // color = colore "personaggio" dell'artista (vedi --c-* in global.css)
